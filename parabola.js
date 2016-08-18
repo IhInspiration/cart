@@ -79,6 +79,7 @@ var parabola = {
         this.y2 = this.objT - this.cartT;
         this.b = (this.y2 - this.a * this.x2 * this.x2) / this.x2;
         this.stepX = (this.cartL - this.objL) / this.duration;
+        this.stepY = (this.cartT - this.objT) / this.duration;
         this.stepW = (this.w - this.minW) / this.duration;
         this.stepH = (this.h - this.minH) / this.duration;
         this.stepO = (this.startO - this.endO) / this.duration;
@@ -97,13 +98,21 @@ var parabola = {
         this.lastElement = this.obj;
         var that = this;
         var sport = setInterval(function(){
-            that.x += that.stepX;
-            that.y = that.objT - that.calcY(that.x - that.objL, that.a, that.b);
+            if(that.objL == that.cartL){
+                that.y += that.stepY;
+            }else{
+                that.x += that.stepX;
+                that.y = that.objT - that.calcY(that.x - that.objL, that.a, that.b);
+            }
             that.w -= that.stepW;
             that.h -= that.stepH;
             that.startO -= that.stepO;
             that.obj.css({"left": that.x + "px", "top": that.y + "px", "width": that.w, "height": that.h, "opacity": that.startO});
-            if(that.x >= that.cartL){
+            if(that.objL < that.cartL && that.x >= that.cartL){
+                clearInterval(sport);
+                that.obj.remove();
+                that.callback();
+            }else if(that.objL > that.cartL && that.x <= that.cartL){
                 clearInterval(sport);
                 that.obj.remove();
                 that.callback();
