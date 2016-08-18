@@ -8,7 +8,7 @@
  * @version v1.0.0
  * @params (parabola.defaultParams)
  *      cart: {*|jQuery|HTMLElement} 购物车（目标）元素 默认：$("#cart")
- *      background {string} 商品元素背景 默认为background: "#F53080"
+ *      background {string} 商品元素背景 默认为background: "#1ae0ff"
  *      borderRadius {string} 商品元素圆角 默认：50%
  *      originW: {number} 商品元素原始宽度 默认：50px
  *      originH: {number} 商品元素原始高度 默认：50px
