@@ -8,44 +8,49 @@
  * @version v1.0.0
  * @params (parabola.defaultParams)
  *      cart: {*|jQuery|HTMLElement} 购物车（目标）元素 默认：$("#cart")
- *      originW: {number} 商品原始宽度 默认：50px
- *      originH: {number} 商品原始高度 默认：50px
- *      minW: {number} 商品结束宽度 默认：30px
- *      minH: {number} 商品结束高度 默认：30px
+ *      background {string} 商品元素背景 默认为background: "#F53080"
+ *      borderRadius {string} 商品元素圆角 默认：50%
+ *      originW: {number} 商品元素原始宽度 默认：50px
+ *      originH: {number} 商品元素原始高度 默认：50px
+ *      minW: {number} 商品元素结束宽度 默认：20px
+ *      minH: {number} 商品元素结束高度 默认：20px
  *      duration: {number} 持续时间(秒) 默认：1s
  *      a: {number} 曲率（y = a * x * x + b * x + c） 默认: -0.002
- *      startO: {number} 起始透明度 默认：1
- *      endO: {number} 结束透明度 默认：0.2
+ *      startO: {number} 商品元素起始透明度 默认：1
+ *      endO: {number} 商品元素结束透明度 默认：0.4
  *      offset: {Array} [起始商品left,起始商品top] 默认：[0,0]
  *      callback: {function} parabola.defaultOptions.callback 结束回调函数
  */
 var parabola = {
     defaultParams:{
         cart: $("#cart"),
+        background: "#1ae0ff",
+        borderRadius: "50%",
         originW: 50,
         originH: 50,
-        minW: 30,
-        minH: 30,
+        minW: 20,
+        minH: 20,
         duration: 1,
         a: -0.002,
         startO: 1,
-        endO: 0.2,
+        endO: 0.4,
         offset: [0, 0],
         callback: function(){
             alert("成功添加到购物车！");
         }
     },
-    setOptions: function(options){
+    lastElement: null,
+    setParams: function(options){
         options = $.extend({}, this.defaultParams, options);
         if(options.cart.length <= 0){
             alert('无法获取购物车元素，默认为$("#cart")');
             return false;
         }
-        options.obj = $("<div></div>").addClass('parabolaObj');
+        options.obj = $("<div></div>");
         $("body").append(options.obj.css({
             "position": "absolute",
-            "border-radius": "50%",
-            "background-color": "#F53080",
+            "border-radius": options.borderRadius,
+            "background": options.background,
             "width": options.originW + "px",
             "height": options.originH + "px",
             "left": options.offset[0],
@@ -54,7 +59,7 @@ var parabola = {
         return options;
     },
     init: function(options) {
-        options = this.setOptions(options);
+        options = this.setParams(options);
         this.a = options.a;
         this.startO = options.startO;
         this.endO = options.endO;
@@ -66,8 +71,8 @@ var parabola = {
         this.callback = options.callback;
         this.cartL = this.cart.offset().left;
         this.cartT = this.cart.offset().top;
-        this.w = this.cart.width();
-        this.h = this.cart.height();
+        this.w = this.obj.width();
+        this.h = this.obj.height();
         this.minW = options.minW;
         this.minH = options.minH;
         this.x2 = this.cartL - this.objL;
@@ -85,8 +90,11 @@ var parabola = {
         return a * x * x + b * x;
     },
     run: function(options){
-        $(".parabolaObj").remove();
+        if(this.lastElement != null){
+            this.lastElement.remove();
+        }
         this.init(options);
+        this.lastElement = this.obj;
         var that = this;
         var sport = setInterval(function(){
             that.x += that.stepX;

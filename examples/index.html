@@ -8,14 +8,17 @@
 </head>
 <body>
     <!--目标-->
-    <div id="cart">购物车</div>
-    <button id="item">点击</button>
+    <div id="cart"></div>
+    <button id="item">加入购物车</button>
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="../parabola.js"></script>
     <script type="text/javascript">
         //示例
         $("#item").click(function(){
-            parabola.run({offset:[$(this).offset().left, $(this).offset().top]});
+            parabola.run({
+                offset:[$(this).offset().left, $(this).offset().top],
+                background: 'url("js.png")'
+            });
         });
     </script>
 </body>
